@@ -4,6 +4,6 @@ const Input = (props) => {
     `;
 
   return template;
-}
+};
 
 export default Input;

@@ -137,14 +137,37 @@ body {
   justify-content: center;
   padding: 9px 7px 1px;
   font-family: 'Hind', sans-serif;
-  
+}
+
+.display-name {
+  width: 220px;
+}
+
+#input-file{
+  visibility: hidden;
+  box-sizing: border-box;
+  width: 1px;
+}
+
+.file-input-label {
+  width: 90%;
+  text-align: center;
+  background: #9c64a6;
+  border-radius: 6px;
+  padding: 0 0.8em;
+  font-size: 0.9em;
+  transition: 200ms linear;
+}
+
+.file-input-label:hover {
+  background: #e1bee7;
+  cursor: pointer;
 }
 
 .user-icon{
   font-size: 50px;
   color:#9c64a6;
 }
-
 
 .post-btn {
   align-self: flex-end;
@@ -416,14 +439,24 @@ display: none;
     border: 2px solid #9c64a6;
     border-top: 0;
     border-radius: 0 0 10px 10px;
-    
   }
+
+  .edit-profile {
+    height: 100px;
+    justify-content: space-around;
+  }
+
   .photo-profile{
     margin-top:10px;
     height: max-content;
     font-size: 17px;
     flex-direction: column;
   }
+
+  .user-info {
+    margin: 0;
+  }
+
   .add-post{
     width: 39vw;
   }

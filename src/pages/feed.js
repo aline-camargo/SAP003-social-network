@@ -3,6 +3,7 @@ import Button from '../components/button.js';
 import textArea from '../components/text-area.js';
 import actionIcon from '../components/action-icon.js';
 import selectPrivacy from '../components/selectPrivacy.js';
+import Profile from '../components/profile.js';
 
 const logout = (e) => {
   app.auth.signOut().catch((error) => {
@@ -338,72 +339,6 @@ const changeViewPost = (e) => {
       });
   }
 };
-
-const Profile = () => {
-  const username = app.auth.currentUser;
-  const user = app.auth.currentUser.uid;
-  const name = username.displayName.trim();
-
-
-  const templateProfile = `<div class="photo-profile">
-      <div class="cover">
-      <img class="cover"src="../image/cover.png"/>
-      </div>
-      <div class="profile">
-      <i class="far fa-user user-icon"></i>
-          <h1 class="user-info">${name}</h1>
-          ${actionIcon({
-    class: 'edit-btn minibtns fas fa-pencil-alt',
-    name: user.user,
-    dataDocid: user.id,
-    onClick: editProfile,
-  })}      
-          ${actionIcon({
-    class: 'save-btn minibtns hide fas fa-check',
-    name: user.user,
-    dataDocid: user.id,
-    onClick: updateProfile,
-  })}   
-      
-
-     </div> 
-   </div> 
-      `;
-  return templateProfile;
-};
-
-const editProfile = (pencilIcon) => {
-  pencilIcon.className = 'edit-btn minibtns fas fa-pencil-alt hide';
-  pencilIcon.nextElementSibling.className = 'save-btn minibtns show fas fa-check';
-  pencilIcon.previousElementSibling.contentEditable = true;
-  pencilIcon.previousElementSibling.className += 'editable-text';
-};
-
-const updateProfile = (checkIcon) => {
-  checkIcon.className = 'save-btn minibtns hide fas fa-check';
-  console.log(checkIcon.previousElementSibling);
-  
-  checkIcon.previousElementSibling.className = 'edit-btn minibtns fas fa-pencil-alt show';
-  const pName = checkIcon.previousElementSibling.previousElementSibling;
-  pName.contentEditable = false;
-  pName.className = 'username';
-
-  const user = app.auth.currentUser;
-  user.updateProfile({
-    displayName: pName.textContent,
-    name: pName.textContent,
-  });
-
-  app.db.collection('posts').where('user', '==', user.uid)
-    .get()
-
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        app.db.collection('posts').doc(doc.id).update({ name: pName.textContent });
-      });
-    });
-};
-
 
 window.app = {
   postsTemplate: '',

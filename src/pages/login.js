@@ -8,24 +8,26 @@ const userLogin = () => {
   const email = document.querySelector('.js-email-input').value;
   const password = document.querySelector('.js-password-input').value;
 
-  firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
-    const errorMessage = error.message;
-    document.querySelector('.erro').textContent = errorMessage;
-  }).then(() => {
-    const user = firebase.auth().currentUser;
-    if (user.emailVerified) {
-      location.hash = '#feed';
-    } else {
-      document.querySelector('.erro').textContent = 'Email não verificado, vá até sua caixa de entrada';
-    }
-  });
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .catch((error) => {
+      const errorMessage = error.message;
+      document.querySelector('.erro').textContent = errorMessage;
+    }).then(() => {
+      const user = firebase.auth().currentUser;
+      if (!user.emailVerified) {
+        document.querySelector('.erro').textContent = 'Email não verificado, vá até sua caixa de entrada';
+      }
+    });
 };
+
+firebase.auth().onAuthStateChanged((user) => {
+  const checkUser = user ? '#feed' : '';
+  window.location.hash = checkUser;
+});
 
 const loginGoogle = () => {
   const provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider).catch((erro) => {
-    document.querySelector('.erro').textContent = erro.message;
-  }).then(location.hash = '#feed');
+  firebase.auth().signInWithPopup(provider);
 };
 
 const Login = () => {

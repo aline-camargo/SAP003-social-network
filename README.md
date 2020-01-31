@@ -64,11 +64,11 @@ social, tendo isso em mente implementamos as histórias nessa ordem:
 
 Recebemos dois layouts para seguir como protótipos e a partir desses desenvolvemos os nossos.
 
-###Layouts de login
+### Layouts de login
 
 ![](/src/image/loginpage.png)
 
-###Layouts do Feed
+### Layouts do Feed
 
 ![](/src/image/feed.png)
 

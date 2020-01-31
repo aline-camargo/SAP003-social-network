@@ -10,14 +10,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-// var firebaseConfig = {
-//   apiKey: "AIzaSyBukqPNCaum68DGhsq-exRXVrG3YQBo56U",
-//   authDomain: "social-network-b6633.firebaseapp.com",
-//   storageBucket: "social-network-b6633.appspot.com",
-// };
 
-
-// Get a reference to the storage service, which is used to create references in your storage bucket
 window.auth = firebase.auth();
-// window.db = firebase.data
 db.settings({ timeStampsInSnapshots: true });

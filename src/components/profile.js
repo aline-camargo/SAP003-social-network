@@ -1,8 +1,10 @@
 import actionIcon from './action-icon.js';
+import fileInput from './file-input.js';
 
 window.app = {
   db: firebase.firestore(),
   auth: firebase.auth(),
+  storage: firebase.storage(),
 };
 
 const editProfile = (pencilIcon) => {
@@ -35,42 +37,68 @@ const updateProfile = (checkIcon) => {
     });
 };
 
-const Profile = () => {
+const editPhoto = (target, uid) => {
+  firebase
+    .storage()
+    .ref()
+    .child(`users/${uid}.png`)
+    .put(target.files[0])
+    .then(() => {
+      target.value = '';
+    });
+};
+
+const Profile = (url) => {
   const user = app.auth.currentUser;
   const name = user.displayName.trim();
+  const uid = user.uid;
 
   return `
-    <div class="photo-profile">
         <div class="cover">
             <img class="cover"src="../image/cover.png"/>
         </div>
         <div class="profile">
-            <i class="far fa-user user-icon"></i>
-            <div class="container edit-profile">
-                <div class="row display-name">
-                <h1 class="user-info">${name}</h1>
-                ${actionIcon({
+          <img class="image-profile" src="${url}"/>
+          <div class="container edit-profile">
+            <div class="row display-name">
+              <h1 class="user-info">${name}</h1>
+              ${actionIcon({
     class: 'edit-btn minibtns fas fa-pencil-alt',
     name,
     dataDocid: user.uid,
     onClick: editProfile,
   })}      
-                ${actionIcon({
+              ${actionIcon({
     class: 'save-btn minibtns hide fas fa-check',
     name,
     dataDocid: user.id,
     onClick: updateProfile,
   })}
-  </div>
-                <label for="input-file" class="file-input-label">
-                    Editar foto de perfil
-                    <input type="file" id="input-file"/>
-                </label>
+              </div>
+              ${fileInput({
+    uid,
+    title: 'Editar foto de perfil',
+    onChange: editPhoto,
+  })}
             </div>
         </div> 
-    </div> 
     `;
 };
 
+const preProfile = () => {
+  const user = app.auth.currentUser.uid;
+  firebase
+    .storage()
+    .ref()
+    .child(`users/${user}.png`)
+    .getDownloadURL()
+    .catch((err) => {
+      console.log(err);
+    })
+    .then((url) => {
+      document.querySelector('.photo-profile').innerHTML = Profile(url);
+    });
+};
 
-export default Profile;
+
+export default preProfile;

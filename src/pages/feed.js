@@ -3,7 +3,7 @@ import Button from '../components/button.js';
 import textArea from '../components/text-area.js';
 import actionIcon from '../components/action-icon.js';
 import selectPrivacy from '../components/selectPrivacy.js';
-import Profile from '../components/profile.js';
+import preProfile from '../components/profile.js';
 
 const logout = (e) => {
   app.auth.signOut().catch((error) => {
@@ -255,7 +255,8 @@ const Feed = (props) => {
   })}
   </header>
     <section class="container-main screen-margin-bottom">
-      ${Profile()}
+      <div class="photo-profile">
+      </div>
       <section class="container margin-top-container">
       <div class='column new-post'>
       ${textArea({
@@ -301,6 +302,7 @@ const Feed = (props) => {
       </section>
     </section>
   `;
+  preProfile();
   return template;
 };
 

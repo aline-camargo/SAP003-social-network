@@ -6,7 +6,7 @@ import selectPrivacy from '../components/selectPrivacy.js';
 import preProfile from '../components/profile.js';
 
 const logout = (e) => {
-  app.auth.signOut().catch((error) => {
+  funcs.auth.signOut().catch((error) => {
     // console.log(error);
   });
 };
@@ -14,7 +14,7 @@ const logout = (e) => {
 const deletePost = (deleteButton) => {
   const confirmDelete = confirm('Deseja mesmo deletar?');
   if (confirmDelete) {
-    app.db.collection('posts').doc(deleteButton.dataset.docid).delete();
+    funcs.db.collection('posts').doc(deleteButton.dataset.docid).delete();
   }
 };
 
@@ -42,7 +42,7 @@ const saveEditPost = (checkIcon) => {
 
 const like = (heart) => {
   const newlike = Number(heart.nextElementSibling.textContent) + 1;
-  app.db.collection('posts').doc(heart.dataset.docid)
+  funcs.db.collection('posts').doc(heart.dataset.docid)
     .update({
       likes: newlike,
     });
@@ -55,11 +55,11 @@ const deleteComment = (commentDeleteIcon) => {
     const postId = post.dataset.docid;
     const commentId = Number(commentDeleteIcon.dataset.docid);
 
-    app.db.collection('posts').doc(postId).get().then((qs) => {
+    funcs.db.collection('posts').doc(postId).get().then((qs) => {
       const commentsPosts = qs.data().comments;
       const updatedComments = commentsPosts.filter(comment => comment.timestampComment !== commentId);
 
-      app.db.collection('posts').doc(postId).update({
+      funcs.db.collection('posts').doc(postId).update({
         commentsCount: firebase.firestore.FieldValue.increment(-1),
         comments: updatedComments,
       });
@@ -68,7 +68,7 @@ const deleteComment = (commentDeleteIcon) => {
 };
 
 const checkUserEdit = (doc) => {
-  const user = app.auth.currentUser.uid;
+  const user = funcs.auth.currentUser.uid;
   if (user === doc.user) {
     return `
     ${actionIcon({
@@ -89,7 +89,7 @@ const checkUserEdit = (doc) => {
 };
 
 const checkUserDelete = (doc) => {
-  const user = app.auth.currentUser.uid;
+  const user = funcs.auth.currentUser.uid;
   if (user === doc.user && doc.id) {
     return `
   ${actionIcon({
@@ -119,13 +119,13 @@ const saveComment = (event) => {
     const comment = event.target.value;
     const id = event.target.parentElement.dataset.docid;
 
-    app.db.collection('posts').doc(id).update({
+    funcs.db.collection('posts').doc(id).update({
       commentsCount: firebase.firestore.FieldValue.increment(1),
       comments: firebase.firestore.FieldValue.arrayUnion({
         comment,
-        name: app.auth.currentUser.displayName,
+        name: funcs.auth.currentUser.displayName,
         timestampComment: new Date().getTime(),
-        user: app.auth.currentUser.uid,
+        user: funcs.auth.currentUser.uid,
         date: new Date().toLocaleString('pt-BR').slice(0, 16),
       }),
     });
@@ -200,25 +200,25 @@ const postTemplate = doc => `
 
 
 const newPost = () => {
-  const textArea = document.querySelector('.add-post');
+  const theTextArea = document.querySelector('.add-post');
   const privacyOption = document.querySelector('.privacy-option');
   const post = {
-    name: app.auth.currentUser.displayName,
-    user: app.auth.currentUser.uid,
-    text: textArea.value,
+    name: funcs.auth.currentUser.displayName,
+    user: funcs.auth.currentUser.uid,
+    text: theTextArea.value.replace(/\n/g, '<br>'),
     likes: 0,
     commentsCount: 0,
     timestamp: new Date().getTime(),
     date: new Date().toLocaleString('pt-BR').slice(0, 16),
     private: privacyOption.value,
   };
-  app.db.collection('posts').add(post).then((docRef) => {
+  funcs.db.collection('posts').add(post).then((docRef) => {
     docRef = {
       ...post,
       id: docRef.id,
     };
 
-    textArea.value = '';
+    theTextArea.value = '';
     document.querySelector('.post-btn').disabled = true;
   });
 };
@@ -234,7 +234,7 @@ const buttonActivate = (e) => {
 };
 
 const Feed = (props) => {
-  app.postsTemplate = '';
+  funcs.postsTemplate = '';
   document.querySelector('body').className = 'background';
 
   props.posts.forEach((post) => {
@@ -242,7 +242,7 @@ const Feed = (props) => {
       ...post.data(),
       id: post.id,
     };
-    app.postsTemplate += app.postTemplate(docPost);
+    funcs.postsTemplate += funcs.postTemplate(docPost);
   });
 
   const template = `
@@ -298,7 +298,7 @@ const Feed = (props) => {
     value2: 'true',
     txt2: 'Privado',
   })}
-        <div class='container posts'> ${app.postsTemplate} </div>
+        <div class='container posts'> ${funcs.postsTemplate} </div>
       </section>
     </section>
   `;
@@ -320,11 +320,11 @@ const changeViewPost = (e) => {
             ...post.data(),
             id: post.id,
           };
-          document.querySelector('.posts').innerHTML += app.postTemplate(docPost);
+          document.querySelector('.posts').innerHTML += funcs.postTemplate(docPost);
         });
       });
   } else {
-    const currentUser = app.auth.currentUser.uid;
+    const currentUser = funcs.auth.currentUser.uid;
     firebase.firestore().collection('posts')
       .where('user', '==', currentUser)
       .where('private', '==', value)
@@ -336,13 +336,13 @@ const changeViewPost = (e) => {
             ...post.data(),
             id: post.id,
           };
-          document.querySelector('.posts').innerHTML += app.postTemplate(docPost);
+          document.querySelector('.posts').innerHTML += funcs.postTemplate(docPost);
         });
       });
   }
 };
 
-window.app = {
+window.funcs = {
   postsTemplate: '',
   postTemplate,
   db: firebase.firestore(),

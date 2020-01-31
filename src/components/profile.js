@@ -35,6 +35,38 @@ const updateProfile = (checkIcon) => {
         app.db.collection('posts').doc(doc.id).update({ name: pName.textContent });
       });
     });
+
+  // app.db.collection('posts')
+  //   .where('commentsCount', '>', 0)
+  //   .get()
+  //   .then((querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //       app.db.collection('posts').doc(doc.id)
+  //         .get()
+  //         .then((querySnapshot2) => {
+  //           querySnapshot2.data().comments.forEach((comm) => {
+  //             if (comm.user === user.uid) {
+  //               console.log(comm.name)
+  //               app.db
+  //                 .collection('posts')
+  //                 .doc(querySnapshot2.id)
+  //                 .update({
+  //                   comments: {
+  //                     name: pName.textContent,
+  //                   },
+  //                 })
+  //                 .get()
+  //                 .then(qs => console.log(qs.data().comments.name));
+  //               // .update({
+  //               //   text: pText.textContent,
+  //               //   date: new Date().toLocaleString('pt-BR').slice(0, 16),
+  //               // });
+  //             }
+  //           });
+  //         });
+  //       // .update({ name: pName.textContent });
+  //     });
+  //   });
 };
 
 const editPhoto = (target, uid) => {

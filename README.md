@@ -72,8 +72,6 @@ Recebemos dois layouts para seguir como protótipos e a partir desses desenvolve
 
 ![](/src/image/feed.png)
 
-Você pode ver a versão final deste projeto [AQUI NESTE LINK](https://social-network-b6633.firebaseapp.com/)
-
 ## 5. Considerações finais
 
 Este projeto foi desenvolvido por Aline Camargo, Jackeline Mattar e Letícia Sampaio, durante o Bootcamp Laboratória.

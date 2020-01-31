@@ -35,7 +35,7 @@ const saveEditPost = (checkIcon) => {
   pText.contentEditable = false;
   pText.className = 'text';
   db.collection('posts').doc(id).update({
-    text: pText.textContent.replace(/\n/g, '<br>'),
+    text: pText.textContent,
     date: new Date().toLocaleString('pt-BR').slice(0, 16),
   });
 };
@@ -116,7 +116,7 @@ const addComment = (commentIcon) => {
 
 const saveComment = (event) => {
   if (event.keyCode === 13) {
-    const comment = event.target.value.replace(/\n/g, '<br>');
+    const comment = event.target.value;
     const id = event.target.parentElement.dataset.docid;
 
     funcs.db.collection('posts').doc(id).update({

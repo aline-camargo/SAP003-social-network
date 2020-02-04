@@ -135,7 +135,14 @@ body {
   display: flex;
   font-family: 'Hind', sans-serif;
   font-size: 1.2em;
+}
+
+.notification-success {
   background:#42c042;
+}
+
+.notification-error {
+  background: #b72020;
 }
 
 .profile{
@@ -143,6 +150,7 @@ body {
   align-items: center;
   justify-content: space-around;
   width: 95%;
+  background: #9c64a66b;
   border: 2px solid #9c64a6;
   border-radius: 10px;
   padding: 7px 0;
@@ -158,8 +166,9 @@ body {
 }
 
 .image-profile {
-  width: 21vh;
-  height: 21vh;
+  width: 115px;
+  height: 115px;
+  background-color: whitesmoke;
   object-fit: cover;
   max-width: 135px;
   margin: 5px 0;
@@ -277,20 +286,24 @@ body {
   width: 70vw;
   font-family: 'Hind', sans-serif;
   word-wrap: break-word;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 6px;
 }
 
 .editable-text {
   background-color: whitesmoke;
-  padding: 3px 3px;
+  border: 1px solid#5d5d5d;
+  width: 90% !important;
 }
 
 .editable-name {
-  background:#e8d6ee;
+  background:whitesmoke;
   padding-left: 0.2em;
   box-sizing: border-box;
   width: 90%;
   border-radius: 6px;
-  border: 1px solid;
+  border: 1px solid#5d5d5d;
 }
 
 .text-button {
@@ -414,7 +427,7 @@ display: none;
 }
 
 .privacy-text {
-  font-family: "Hind";
+  font-family: "Hind", sans-serif;
   margin-bottom: 0;
   font-size: 16px;
 }
@@ -470,6 +483,11 @@ display: none;
     height: 280px;
     width: 280px;
     margin-bottom: -37px;
+  }
+
+  .image-profile {
+    width: 135px;
+    height: 135px;
   }
 
   .text-logo{

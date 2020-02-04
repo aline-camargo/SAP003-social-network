@@ -5,9 +5,17 @@ import actionIcon from '../components/action-icon.js';
 import selectPrivacy from '../components/selectPrivacy.js';
 import { Profile, loadProfilePhoto } from '../components/profile.js';
 
-const logout = (e) => {
+const logout = () => {
   funcs.auth.signOut().catch((error) => {
-    // console.log(error);
+    Toastify({
+      text: error.message,
+      duration: 3000,
+      newWindow: true,
+      close: true,
+      gravity: 'top',
+      position: 'center',
+      className: 'notification notification-error',
+    }).showToast();
   });
 };
 
@@ -24,6 +32,7 @@ const makePostEditable = (pencilIcon) => {
   pencilIcon.previousElementSibling.className = 'save-btn minibtns show fas fa-check';
   pencilIcon.parentElement.previousElementSibling.contentEditable = true;
   pencilIcon.parentElement.previousElementSibling.className += ' editable-text';
+  pencilIcon.parentElement.previousElementSibling.focus();
 };
 
 const saveEditPost = (checkIcon) => {
@@ -39,16 +48,15 @@ const saveEditPost = (checkIcon) => {
     date: new Date().toLocaleString('pt-BR').slice(0, 16),
   })
     .then(() => {
-      // Toastify({
-      //   text: 'Post editado com sucesso!',
-      //   duration: 3000,
-      //   newWindow: true,
-      //   close: true,
-      //   gravity: 'top', // `top` or `bottom`
-      //   position: 'center', // `left`, `center` or `right`
-      //   backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
-      //   stopOnFocus: true, // Prevents dismissing of toast on hover
-      // }).showToast();
+      Toastify({
+        text: 'Post editado com sucesso!',
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: 'top',
+        position: 'center',
+        className: 'notification notification-success',
+      }).showToast();
     });
 };
 

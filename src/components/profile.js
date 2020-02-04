@@ -24,6 +24,16 @@ const updateProfile = (checkIcon) => {
     name: pName.textContent,
   });
 
+  Toastify({
+    text: 'Nome alterado! Aguarde alguns segundos para atualização.',
+    duration: 3000,
+    newWindow: true,
+    close: true,
+    gravity: 'top',
+    position: 'center',
+    className: 'notification notification-success',
+  }).showToast();
+
   app.db.collection('posts').where('user', '==', user.uid)
     .get()
     .then((querySnapshot) => {
@@ -42,7 +52,17 @@ const loadProfilePhoto = () => {
     .child(`users/${user}.png`)
     .getDownloadURL()
     .catch((err) => {
-      console.log(err);
+      if (err.code === 'storage/object-not-found') return;
+
+      Toastify({
+        text: err.message,
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: 'top',
+        position: 'center',
+        className: 'notification notification-error',
+      }).showToast();
     })
     .then((url) => {
       if (!url) {
@@ -61,7 +81,7 @@ const editPhoto = (target, uid) => {
     close: true,
     gravity: 'top',
     position: 'center',
-    className: 'notification',
+    className: 'notification notification-success',
   }).showToast();
 
   document.querySelector('.image-profile').src = '../image/loading.gif';

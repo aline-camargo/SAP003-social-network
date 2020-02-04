@@ -3,7 +3,7 @@ import Button from '../components/button.js';
 import textArea from '../components/text-area.js';
 import actionIcon from '../components/action-icon.js';
 import selectPrivacy from '../components/selectPrivacy.js';
-import preProfile from '../components/profile.js';
+import { Profile, loadProfilePhoto } from '../components/profile.js';
 
 const logout = (e) => {
   funcs.auth.signOut().catch((error) => {
@@ -37,7 +37,19 @@ const saveEditPost = (checkIcon) => {
   db.collection('posts').doc(id).update({
     text: pText.textContent,
     date: new Date().toLocaleString('pt-BR').slice(0, 16),
-  });
+  })
+    .then(() => {
+      // Toastify({
+      //   text: 'Post editado com sucesso!',
+      //   duration: 3000,
+      //   newWindow: true,
+      //   close: true,
+      //   gravity: 'top', // `top` or `bottom`
+      //   position: 'center', // `left`, `center` or `right`
+      //   backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+      //   stopOnFocus: true, // Prevents dismissing of toast on hover
+      // }).showToast();
+    });
 };
 
 const like = (heart) => {
@@ -255,8 +267,7 @@ const Feed = (props) => {
   })}
   </header>
     <section class="container-main screen-margin-bottom">
-      <div class="photo-profile">
-      </div>
+      ${Profile()}
       <section class="container margin-top-container">
       <div class='column new-post'>
       ${textArea({
@@ -302,7 +313,7 @@ const Feed = (props) => {
       </section>
     </section>
   `;
-  preProfile();
+  loadProfilePhoto();
   return template;
 };
 

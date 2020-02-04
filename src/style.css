@@ -127,6 +127,17 @@ body {
   margin: 0;
 }
 
+.notification {
+  top: 3vh !important;
+  width: 80%;
+  max-width: none !important;
+  justify-content: space-between;
+  display: flex;
+  font-family: 'Hind', sans-serif;
+  font-size: 1.2em;
+  background:#42c042;
+}
+
 .profile{
   display: flex;
   align-items: center;
@@ -147,7 +158,9 @@ body {
 }
 
 .image-profile {
-  width: 30%;
+  width: 21vh;
+  height: 21vh;
+  object-fit: cover;
   max-width: 135px;
   margin: 5px 0;
   border-radius: 6px;
@@ -269,6 +282,15 @@ body {
 .editable-text {
   background-color: whitesmoke;
   padding: 3px 3px;
+}
+
+.editable-name {
+  background:#e8d6ee;
+  padding-left: 0.2em;
+  box-sizing: border-box;
+  width: 90%;
+  border-radius: 6px;
+  border: 1px solid;
 }
 
 .text-button {
@@ -461,10 +483,6 @@ display: none;
     box-sizing: unset;
     padding: 0;
   }
-
-  /* .image-profile {
-    width: 30%;
-  } */
 
   .edit-profile {
     height: 100px;

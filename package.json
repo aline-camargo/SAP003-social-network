@@ -34,6 +34,8 @@
     "stylelint-config-recommended": "^2.2.0"
   },
   "dependencies": {
-    "serve": "^11.2.0"
+    "serve": "^11.2.0",
+    "toastify-js": "^1.6.2",
+    "toastr": "^2.1.4"
   }
 }

@@ -1,27 +1,26 @@
 import actionIcon from './action-icon.js';
 import fileInput from './file-input.js';
 
-const editProfile = (pencilIcon) => {
+const editProfileName = (pencilIcon) => {
+  const displayName = document.querySelector('.user-info');
   pencilIcon.className = 'edit-btn minibtns fas fa-pencil-alt hide';
   pencilIcon.nextElementSibling.className = 'save-btn minibtns show fas fa-check';
-  pencilIcon.previousElementSibling.contentEditable = true;
-  pencilIcon.previousElementSibling.className += ' editable-name';
-  pencilIcon.previousElementSibling.focus();
+  displayName.contentEditable = true;
+  displayName.classList.add('editable-name');
+  displayName.focus();
 };
 
-const updateProfile = (checkIcon) => {
+const updateProfileName = (checkIcon) => {
+  const displayName = document.querySelector('.user-info');
   checkIcon.className = 'save-btn minibtns hide fas fa-check';
   checkIcon.previousElementSibling.className = 'edit-btn minibtns fas fa-pencil-alt show';
-  checkIcon.previousElementSibling.previousElementSibling.classList.remove('editable-name');
-
-  const pName = checkIcon.previousElementSibling.previousElementSibling;
-  pName.contentEditable = false;
-  pName.className = 'username';
+  displayName.classList.remove('editable-name');
+  displayName.contentEditable = false;
 
   const user = app.auth.currentUser;
   user.updateProfile({
-    displayName: pName.textContent,
-    name: pName.textContent,
+    displayName: displayName.textContent,
+    name: displayName.textContent,
   });
 
   Toastify({
@@ -34,11 +33,41 @@ const updateProfile = (checkIcon) => {
     className: 'notification notification-success',
   }).showToast();
 
-  app.db.collection('posts').where('user', '==', user.uid)
+  app.db
+    .collection('posts')
+    .where('user', '==', user.uid)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        app.db.collection('posts').doc(doc.id).update({ name: pName.textContent });
+        app.db
+          .collection('posts')
+          .doc(doc.id)
+          .update({ name: displayName.textContent });
+      });
+    });
+
+  app.db
+    .collection('posts')
+    .where('commentsCount', '>', 0)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const comments = doc.data().comments;
+        const matchComments = comments.filter(comment => comment.user === user.uid);
+        if (matchComments.length > 0) {
+          matchComments.forEach((comm) => {
+            const indextoUpdate = comments.findIndex((elem) => {
+              return elem.timestampComment === comm.timestampComment;
+            });
+            comments[indextoUpdate].name = displayName.textContent;
+            app.db
+              .collection('posts')
+              .doc(doc.id)
+              .update({
+                comments,
+              });
+          });
+        }
       });
     });
 };
@@ -116,13 +145,13 @@ const Profile = () => {
     class: 'edit-btn minibtns fas fa-pencil-alt',
     name,
     dataDocid: user.uid,
-    onClick: editProfile,
+    onClick: editProfileName,
   })}      
               ${actionIcon({
     class: 'save-btn minibtns hide fas fa-check',
     name,
     dataDocid: user.id,
-    onClick: updateProfile,
+    onClick: updateProfileName,
   })}
               </div>
               ${fileInput({

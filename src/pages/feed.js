@@ -26,7 +26,6 @@ const deletePost = (deleteButton) => {
   }
 };
 
-
 const makePostEditable = (pencilIcon) => {
   pencilIcon.className = 'edit-btn minibtns hide';
   pencilIcon.previousElementSibling.className = 'save-btn minibtns show fas fa-check';
@@ -92,17 +91,17 @@ const checkUserEdit = (doc) => {
   if (user === doc.user) {
     return `
     ${actionIcon({
-    class: 'save-btn minibtns hide fas fa-check',
-    name: doc.user,
-    dataDocid: doc.id,
-    onClick: saveEditPost,
-  })}
+      class: 'save-btn minibtns hide fas fa-check',
+      name: doc.user,
+      dataDocid: doc.id,
+      onClick: saveEditPost,
+    })}
       ${actionIcon({
-    class: 'edit-btn minibtns fas fa-pencil-alt',
-    name: doc.user,
-    dataDocid: doc.id,
-    onClick: makePostEditable,
-  })}
+      class: 'edit-btn minibtns fas fa-pencil-alt',
+      name: doc.user,
+      dataDocid: doc.id,
+      onClick: makePostEditable,
+    })}
     `;
   }
   return '';
@@ -113,19 +112,19 @@ const checkUserDelete = (doc) => {
   if (user === doc.user && doc.id) {
     return `
   ${actionIcon({
-    class: 'delete-btn minibtns fas fa-times',
-    name: doc.user,
-    dataDocid: doc.id,
-    onClick: deletePost,
-  })}`;
+      class: 'delete-btn minibtns fas fa-times',
+      name: doc.user,
+      dataDocid: doc.id,
+      onClick: deletePost,
+    })}`;
   } else if (user === doc.user && doc.timestampComment) {
     return `
   ${actionIcon({
-    class: 'delete-btn delete-btn-comment minibtns fas fa-times',
-    name: doc.user,
-    dataDocid: doc.timestampComment,
-    onClick: deleteComment,
-  })}`;
+      class: 'delete-btn delete-btn-comment minibtns fas fa-times',
+      name: doc.user,
+      dataDocid: doc.timestampComment,
+      onClick: deleteComment,
+    })}`;
   }
   return '';
 };
@@ -139,16 +138,18 @@ const saveComment = (event) => {
     const comment = event.target.value;
     const id = event.target.parentElement.dataset.docid;
 
-    funcs.db.collection('posts').doc(id).update({
-      commentsCount: firebase.firestore.FieldValue.increment(1),
-      comments: firebase.firestore.FieldValue.arrayUnion({
-        comment,
-        name: funcs.auth.currentUser.displayName,
-        timestampComment: new Date().getTime(),
-        user: funcs.auth.currentUser.uid,
-        date: new Date().toLocaleString('pt-BR').slice(0, 16),
-      }),
-    });
+    funcs.db
+      .collection('posts')
+      .doc(id).update({
+        commentsCount: firebase.firestore.FieldValue.increment(1),
+        comments: firebase.firestore.FieldValue.arrayUnion({
+          comment,
+          name: funcs.auth.currentUser.displayName,
+          timestampComment: new Date().getTime(),
+          user: funcs.auth.currentUser.uid,
+          date: new Date().toLocaleString('pt-BR').slice(0, 16),
+        }),
+      });
   }
 };
 
@@ -195,25 +196,25 @@ const postTemplate = doc => `
       <div class='column comments' data-docid=${doc.id}>
         <div>
         ${actionIcon({
-    class: 'comment-btn minibtns fab far fa-paper-plane',
-    name: doc.user,
-    dataDocid: doc.id,
-    onClick: addComment,
-  })}
+  class: 'comment-btn minibtns fab far fa-paper-plane',
+  name: doc.user,
+  dataDocid: doc.id,
+  onClick: addComment,
+})}
       <span class="likes">${doc.commentsCount}</span>
         ${actionIcon({
-    class: 'like-btn minibtns fas fa-heart',
-    name: doc.user,
-    dataDocid: doc.id,
-    onClick: like,
-  })}
+  class: 'like-btn minibtns fas fa-heart',
+  name: doc.user,
+  dataDocid: doc.id,
+  onClick: like,
+})}
     <span class="likes">${doc.likes}</span>
         </div>
       ${textArea({
-    class: 'add-comment hide',
-    placeholder: 'Comente...',
-    onKeyup: saveComment,
-  })}
+  class: 'add-comment hide',
+  placeholder: 'Comente...',
+  onKeyup: saveComment,
+})}
 
       </div>
     </div>`;
@@ -251,78 +252,6 @@ const buttonActivate = (e) => {
   } else {
     postBtn.disabled = true;
   }
-};
-
-const Feed = (props) => {
-  funcs.postsTemplate = '';
-  document.querySelector('body').className = 'background';
-
-  props.posts.forEach((post) => {
-    const docPost = {
-      ...post.data(),
-      id: post.id,
-    };
-    funcs.postsTemplate += funcs.postTemplate(docPost);
-  });
-
-  const template = `
-  <header class='header'> <h2 class='header-title'> MusicalSpace </h2>
-  ${actionIcon({
-    class: 'signout-icon fas fa-sign-out-alt',
-    name: 'sair',
-    dataDocid: 'a',
-    onClick: logout,
-  })}
-  </header>
-    <section class="container-main screen-margin-bottom">
-      ${Profile()}
-      <section class="container margin-top-container">
-      <div class='column new-post'>
-      ${textArea({
-    class: 'add-post',
-    placeholder: 'O que você está ouvindo?',
-    onKeyup: buttonActivate,
-  })}
-  <div class='row'>
-    ${selectPrivacy({
-    class: 'privacy-option privacy-post',
-    onChange: () => {},
-    opClass1: 'public',
-    value1: 'false',
-    txt1: 'Público',
-    opClass2: 'private',
-    value2: 'true',
-    txt2: 'Privado',
-  })}
-    
-  ${Button({
-    type: 'button',
-    title: 'Postar',
-    class: 'primary-button post-btn',
-    onClick: newPost,
-    disabled: 'disabled',
-  })}
-  </div>
-      </div>
-      <p class="privacy-text">
-      Visualizar Posts:
-      </p>
-      ${selectPrivacy({
-    class: 'privacy-option',
-    onChange: changeViewPost,
-    opClass1: 'public',
-    value1: 'false',
-    txt1: 'Público',
-    opClass2: 'private',
-    value2: 'true',
-    txt2: 'Privado',
-  })}
-        <div class='container posts'> ${funcs.postsTemplate} </div>
-      </section>
-    </section>
-  `;
-  loadProfilePhoto();
-  return template;
 };
 
 const changeViewPost = (e) => {
@@ -364,6 +293,78 @@ const changeViewPost = (e) => {
         });
       });
   }
+};
+
+const Feed = (props) => {
+  funcs.postsTemplate = '';
+  document.querySelector('body').className = 'background';
+
+  props.posts.forEach((post) => {
+    const docPost = {
+      ...post.data(),
+      id: post.id,
+    };
+    funcs.postsTemplate += funcs.postTemplate(docPost);
+  });
+
+  const template = `
+  <header class='header'> <h2 class='header-title'> MusicalSpace </h2>
+  ${actionIcon({
+    class: 'signout-icon fas fa-sign-out-alt',
+    name: 'sair',
+    dataDocid: 'a',
+    onClick: logout,
+  })}
+  </header>
+    <section class="container-main screen-margin-bottom">
+      ${Profile()}
+      <section class="container margin-top-container">
+      <div class='column new-post'>
+      ${textArea({
+    class: 'add-post',
+    placeholder: 'O que você está ouvindo?',
+    onKeyup: buttonActivate,
+  })}
+  <div class='row'>
+    ${selectPrivacy({
+    class: 'privacy-option privacy-post',
+    onChange: () => { },
+    opClass1: 'public',
+    value1: 'false',
+    txt1: 'Público',
+    opClass2: 'private',
+    value2: 'true',
+    txt2: 'Privado',
+  })}
+    
+  ${Button({
+    type: 'button',
+    title: 'Postar',
+    class: 'primary-button post-btn',
+    onClick: newPost,
+    disabled: 'disabled',
+  })}
+  </div>
+      </div>
+      <p class="privacy-text">
+      Visualizar Posts:
+      </p>
+      ${selectPrivacy({
+    class: 'privacy-option',
+    onChange: changeViewPost,
+    opClass1: 'public',
+    value1: 'false',
+    txt1: 'Público',
+    opClass2: 'private',
+    value2: 'true',
+    txt2: 'Privado',
+  })}
+        <div class='container posts'> ${funcs.postsTemplate} </div>
+      </section>
+    </section>
+  `;
+  loadProfilePhoto();
+  return template;
 };
 
 window.funcs = {

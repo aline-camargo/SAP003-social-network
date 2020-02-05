@@ -51,6 +51,7 @@ const deletePost = (e) => {
   } else {
     funcs.db.collection('posts').doc(e.currentTarget.id).delete();
   }
+  document.querySelector('#check-delete').classList.add('hide');
 };
 
 const makePostEditable = (pencilIcon) => {

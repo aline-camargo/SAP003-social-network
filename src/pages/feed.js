@@ -285,8 +285,8 @@ const Feed = (props) => {
   })}
   <div class='row'>
     ${selectPrivacy({
-    class: 'privacy-option',
-    onChange: null,
+    class: 'privacy-option privacy-post',
+    onChange: () => {},
     opClass1: 'public',
     value1: 'false',
     txt1: 'Público',
@@ -326,10 +326,13 @@ const Feed = (props) => {
 };
 
 const changeViewPost = (e) => {
-  document.querySelector('.posts').innerHTML = '';
   const value = e.target.value;
-  if (value == 'false') {
-    firebase.firestore().collection('posts')
+  document.querySelector('.posts').innerHTML = '';
+  document.querySelector('.privacy-post').value = value;
+  if (value === 'false') {
+    firebase
+      .firestore()
+      .collection('posts')
       .where('private', '==', value)
       .orderBy('timestamp', 'desc')
       .get()
@@ -344,12 +347,14 @@ const changeViewPost = (e) => {
       });
   } else {
     const currentUser = funcs.auth.currentUser.uid;
-    firebase.firestore().collection('posts')
+    firebase
+      .firestore()
+      .collection('posts')
       .where('user', '==', currentUser)
       .where('private', '==', value)
       .orderBy('timestamp', 'desc')
-      .get()
-      .then((querySnapshot) => {
+      .onSnapshot((querySnapshot) => {
+        document.querySelector('.posts').innerHTML = '';
         querySnapshot.forEach((post) => {
           const docPost = {
             ...post.data(),

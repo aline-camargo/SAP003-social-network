@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "serve": "^11.2.0",
-    "toastify-js": "^1.6.2",
-    "toastr": "^2.1.4"
+    "toastify-js": "^1.6.2"
   }
 }

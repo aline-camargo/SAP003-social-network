@@ -1,6 +1,7 @@
 /* eslint-disable no-else-return */
 import Button from '../components/button.js';
 import textArea from '../components/text-area.js';
+import Modal from '../components/modal.js';
 import actionIcon from '../components/action-icon.js';
 import selectPrivacy from '../components/selectPrivacy.js';
 import { Profile, loadProfilePhoto } from '../components/profile.js';
@@ -14,15 +15,41 @@ const logout = () => {
       close: true,
       gravity: 'top',
       position: 'center',
-      className: 'notification notification-error',
+      className: 'notification error',
     }).showToast();
   });
 };
 
-const deletePost = (deleteButton) => {
-  const confirmDelete = confirm('Deseja mesmo deletar?');
-  if (confirmDelete) {
-    funcs.db.collection('posts').doc(deleteButton.dataset.docid).delete();
+const showModal = (deleteButton) => {
+  document.querySelector('#check-delete').classList.remove('hide');
+  if (Array.from(deleteButton.classList).includes('delete-btn-comment')) {
+    document.querySelector('.confirm-delete').id = `${deleteButton.parentElement.dataset.post}+${deleteButton.dataset.docid}`;
+  } else {
+    document.querySelector('.confirm-delete').id = deleteButton.dataset.docid;
+  }
+};
+
+const deleteComment = (postId, commentId) => {
+  funcs.db.collection('posts').doc(postId).get().then((qs) => {
+    const commentsPosts = qs.data().comments;
+    const updatedComments = commentsPosts.filter(comment => comment.timestampComment !== commentId);
+
+    funcs.db.collection('posts').doc(postId).update({
+      commentsCount: firebase.firestore.FieldValue.increment(-1),
+      comments: updatedComments,
+    });
+  });
+};
+
+const deletePost = (e) => {
+  const info = e.currentTarget.id;
+  if (info.includes('+')) {
+    const dividedInfo = e.currentTarget.id.split('+');
+    const postId = dividedInfo[0];
+    const commentId = Number(dividedInfo[1]);
+    funcs.deleteComment(postId, commentId);
+  } else {
+    funcs.db.collection('posts').doc(e.currentTarget.id).delete();
   }
 };
 
@@ -54,7 +81,7 @@ const saveEditPost = (checkIcon) => {
         close: true,
         gravity: 'top',
         position: 'center',
-        className: 'notification notification-success',
+        className: 'notification success',
       }).showToast();
     });
 };
@@ -67,41 +94,22 @@ const like = (heart) => {
     });
 };
 
-const deleteComment = (commentDeleteIcon) => {
-  const confirmDelete = confirm('Deseja mesmo deletar?');
-  if (confirmDelete) {
-    const post = commentDeleteIcon.parentElement.parentElement.parentElement.previousElementSibling.firstElementChild;
-    const postId = post.dataset.docid;
-    const commentId = Number(commentDeleteIcon.dataset.docid);
-
-    funcs.db.collection('posts').doc(postId).get().then((qs) => {
-      const commentsPosts = qs.data().comments;
-      const updatedComments = commentsPosts.filter(comment => comment.timestampComment !== commentId);
-
-      funcs.db.collection('posts').doc(postId).update({
-        commentsCount: firebase.firestore.FieldValue.increment(-1),
-        comments: updatedComments,
-      });
-    });
-  }
-};
-
 const checkUserEdit = (doc) => {
   const user = funcs.auth.currentUser.uid;
   if (user === doc.user) {
     return `
     ${actionIcon({
-      class: 'save-btn minibtns hide fas fa-check',
-      name: doc.user,
-      dataDocid: doc.id,
-      onClick: saveEditPost,
-    })}
+    class: 'save-btn minibtns hide fas fa-check',
+    name: doc.user,
+    dataDocid: doc.id,
+    onClick: saveEditPost,
+  })}
       ${actionIcon({
-      class: 'edit-btn minibtns fas fa-pencil-alt',
-      name: doc.user,
-      dataDocid: doc.id,
-      onClick: makePostEditable,
-    })}
+    class: 'edit-btn minibtns fas fa-pencil-alt',
+    name: doc.user,
+    dataDocid: doc.id,
+    onClick: makePostEditable,
+  })}
     `;
   }
   return '';
@@ -112,19 +120,19 @@ const checkUserDelete = (doc) => {
   if (user === doc.user && doc.id) {
     return `
   ${actionIcon({
-      class: 'delete-btn minibtns fas fa-times',
-      name: doc.user,
-      dataDocid: doc.id,
-      onClick: deletePost,
-    })}`;
+    class: 'delete-btn minibtns fas fa-times',
+    name: doc.user,
+    dataDocid: doc.id,
+    onClick: showModal,
+  })}`;
   } else if (user === doc.user && doc.timestampComment) {
     return `
   ${actionIcon({
-      class: 'delete-btn delete-btn-comment minibtns fas fa-times',
-      name: doc.user,
-      dataDocid: doc.timestampComment,
-      onClick: deleteComment,
-    })}`;
+    class: 'delete-btn delete-btn-comment minibtns fas fa-times',
+    name: doc.user,
+    dataDocid: doc.timestampComment,
+    onClick: showModal,
+  })}`;
   }
   return '';
 };
@@ -153,15 +161,17 @@ const saveComment = (event) => {
   }
 };
 
-const checkComments = (comments) => {
+const checkComments = (comments, postId) => {
   if (comments && comments.length !== 0) {
     const commentsTemplate = [];
     comments.forEach((obj) => {
-      commentsTemplate.push(`<div class="text comment-area">
-      <p class='comment row'><span class="comment-name">${obj.name} | ${obj.date}</span>
-      ${checkUserDelete(obj)}
-      </p>
-      <p class='comment'>${obj.comment}</p>
+      commentsTemplate.push(`
+      <div class="text comment-area">
+        <p class='comment row' data-post=${postId}>
+          <span class="comment-name">${obj.name} | ${obj.date}</span>
+          ${checkUserDelete(obj)}
+        </p>
+        <p class='comment'>${obj.comment}</p>
     </div>
   `);
     });
@@ -190,31 +200,31 @@ const postTemplate = doc => `
       </div>
 
      
-      ${checkComments(doc.comments)}
+      ${checkComments(doc.comments, doc.id)}
       
 
       <div class='column comments' data-docid=${doc.id}>
         <div>
         ${actionIcon({
-  class: 'comment-btn minibtns fab far fa-paper-plane',
-  name: doc.user,
-  dataDocid: doc.id,
-  onClick: addComment,
-})}
+    class: 'comment-btn minibtns fab far fa-paper-plane',
+    name: doc.user,
+    dataDocid: doc.id,
+    onClick: addComment,
+  })}
       <span class="likes">${doc.commentsCount}</span>
         ${actionIcon({
-  class: 'like-btn minibtns fas fa-heart',
-  name: doc.user,
-  dataDocid: doc.id,
-  onClick: like,
-})}
+    class: 'like-btn minibtns fas fa-heart',
+    name: doc.user,
+    dataDocid: doc.id,
+    onClick: like,
+  })}
     <span class="likes">${doc.likes}</span>
         </div>
       ${textArea({
-  class: 'add-comment hide',
-  placeholder: 'Comente...',
-  onKeyup: saveComment,
-})}
+    class: 'add-comment hide',
+    placeholder: 'Comente...',
+    onKeyup: saveComment,
+  })}
 
       </div>
     </div>`;
@@ -362,6 +372,7 @@ const Feed = (props) => {
         <div class='container posts'> ${funcs.postsTemplate} </div>
       </section>
     </section>
+    ${Modal({ confirm: deletePost })}
   `;
   loadProfilePhoto();
   return template;
@@ -370,6 +381,7 @@ const Feed = (props) => {
 window.funcs = {
   postsTemplate: '',
   postTemplate,
+  deleteComment,
   db: firebase.firestore(),
   auth: firebase.auth(),
 };

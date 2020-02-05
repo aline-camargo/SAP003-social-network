@@ -30,7 +30,7 @@ const updateProfileName = (checkIcon) => {
     close: true,
     gravity: 'top',
     position: 'center',
-    className: 'notification notification-success',
+    className: 'notification success',
   }).showToast();
 
   app.db
@@ -90,7 +90,7 @@ const loadProfilePhoto = () => {
         close: true,
         gravity: 'top',
         position: 'center',
-        className: 'notification notification-error',
+        className: 'notification error',
       }).showToast();
     })
     .then((url) => {
@@ -110,7 +110,7 @@ const editPhoto = (target, uid) => {
     close: true,
     gravity: 'top',
     position: 'center',
-    className: 'notification notification-success',
+    className: 'notification success',
   }).showToast();
 
   document.querySelector('.image-profile').src = '../image/loading.gif';

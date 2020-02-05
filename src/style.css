@@ -43,6 +43,7 @@ body {
   font-family: 'Righteous', cursive;
   font-size: 16px;
   margin-top: 20px;
+  transition: 0.3s;
 }
 
 .primary-button:hover{
@@ -137,12 +138,46 @@ body {
   font-size: 1.2em;
 }
 
-.notification-success {
+.success {
   background:#42c042;
 }
 
-.notification-error {
+.success:hover {
+  background: #62d662;
+}
+
+.error {
   background: #b72020;
+}
+
+.error:hover {
+  background: #e04141;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  background-color: #efeeee;
+  padding: 1em;
+  max-width: 500px;
+  max-height: 100vh;
+  border-radius: 4px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.modal-title {
+  font-family: 'Hind', sans-serif;
 }
 
 .profile{

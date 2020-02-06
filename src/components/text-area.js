@@ -1,6 +1,10 @@
 const textArea = (props) => {
   const template = `
-      <textarea class="${props.class}" placeholder="${props.placeholder}" onkeyup="textarea.handleKeyup(event,${props.onKeyup})"></textarea>`;
+      <textarea
+        class="${props.class}"
+        placeholder="${props.placeholder}"
+        onkeyup="textarea.handleKeyup(event,${props.onKeyup})"
+      ></textarea>`;
 
   return template;
 };

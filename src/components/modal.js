@@ -1,9 +1,5 @@
 import Button from './button.js';
 
-// const confirm = () => {
-//   console.log('confirmou');
-// };
-
 const close = () => {
   document.querySelector('#check-delete').classList.add('hide');
 };

@@ -3,7 +3,7 @@ import Button from '../components/button.js';
 import textArea from '../components/text-area.js';
 import Modal from '../components/modal.js';
 import actionIcon from '../components/action-icon.js';
-import selectPrivacy from '../components/selectPrivacy.js';
+import selectPrivacy from '../components/select-privacy.js';
 import { Profile, loadProfilePhoto } from '../components/profile.js';
 
 const logout = () => {
@@ -140,6 +140,7 @@ const checkUserDelete = (doc) => {
 
 const addComment = (commentIcon) => {
   commentIcon.parentElement.nextElementSibling.classList.toggle('hide');
+  commentIcon.parentElement.nextElementSibling.focus();
 };
 
 const saveComment = (event) => {

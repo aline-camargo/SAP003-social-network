@@ -30,7 +30,7 @@ const createUser = () => {
 };
 
 const location = () => {
-  location.hash = '';
+  window.location.hash = '';
 };
 
 const Register = () => {
@@ -45,14 +45,34 @@ const Register = () => {
     <section class="container">
       <form class="container" id="register-form">
       <p class="erro"></p>
-      ${Input({ type: 'text', placeholder: 'Nome', class: 'js-name-input primary-input' })}
-        ${Input({ type: 'email', placeholder: 'Email', class: 'js-email-input primary-input' })}
-        ${Input({ type: 'password', placeholder: 'Senha', class: 'js-password-input primary-input' })}
-        ${Button({
-    type: 'submit', title: 'Cadastrar', class: 'primary-button', onClick: createUser, disabled: 'enabled',
+        ${Input({
+    type: 'text',
+    placeholder: 'Nome',
+    class: 'js-name-input primary-input',
+  })}
+        ${Input({
+    type: 'email',
+    placeholder: 'Email',
+    class: 'js-email-input primary-input',
+  })}
+        ${Input({
+    type: 'password',
+    placeholder: 'Senha',
+    class: 'js-password-input primary-input',
   })}
         ${Button({
-    type: 'button', title: 'Voltar', class: 'primary-button', onClick: location, disabled: 'enabled',
+    type: 'submit',
+    title: 'Cadastrar',
+    class: 'primary-button',
+    onClick: createUser,
+    disabled: 'enabled',
+  })}
+        ${Button({
+    type: 'button',
+    title: 'Voltar',
+    class: 'primary-button',
+    onClick: location,
+    disabled: 'enabled',
   })}
       </form>
     </section>

@@ -1,7 +1,13 @@
 const Button = (props) => {
   const template = `
-    <button type= ${props.type} class="${props.class}" ${props.disabled} onclick="button.handleClick(event,${props.onClick})">
-    ${props.title}</button>`;
+    <button
+      type=${props.type}
+      class="${props.class}"
+      ${props.disabled}
+      onclick="button.handleClick(event,${props.onClick})"
+    >
+      ${props.title}
+    </button>`;
   return template;
 };
 

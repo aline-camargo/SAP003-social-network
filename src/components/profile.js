@@ -132,15 +132,15 @@ const Profile = () => {
   const uid = user.uid;
 
   return `
-  <div class="photo-profile">
-        <div class="cover">
-            <img class="cover"src="../image/cover.png"/>
-        </div>
-        <div class="profile">
-          <img class="image-profile" src="../image/loading.gif"/>
-          <div class="container edit-profile">
-            <div class="row display-name">
-              <h1 class="user-info">${name}</h1>
+    <div class="photo-profile">
+      <div class="cover">
+        <img class="cover"src="../image/cover.png"/>
+      </div>
+      <div class="profile">
+        <img class="image-profile" src="../image/loading.gif"/>
+        <div class="container edit-profile">
+          <div class="row display-name">
+            <h1 class="user-info">${name}</h1>
               ${actionIcon({
     class: 'edit-btn minibtns fas fa-pencil-alt',
     name,
@@ -153,16 +153,15 @@ const Profile = () => {
     dataDocid: user.id,
     onClick: updateProfileName,
   })}
-              </div>
+          </div>
               ${fileInput({
     uid,
     title: 'Editar foto de perfil',
     onChange: editPhoto,
   })}
-            </div>
-        </div> 
         </div>
-    `;
+      </div> 
+    </div>`;
 };
 
 window.app = {

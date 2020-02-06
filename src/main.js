@@ -8,7 +8,7 @@ const main = document.querySelector('main');
 const authCheck = () => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      location.hash = '#feed';
+      window.location.hash = '#feed';
       firebase
         .firestore()
         .collection('posts')
@@ -18,17 +18,17 @@ const authCheck = () => {
           main.innerHTML = Feed({ posts: querySnapshot });
         });
     } else {
-      location.hash = '';
+      window.location.hash = '';
     }
   });
 };
 
 const routes = () => {
-  if (location.hash === '#register') {
+  if (window.location.hash === '#register') {
     main.innerHTML = Register();
-  } else if (location.hash === '') {
+  } else if (window.location.hash === '') {
     main.innerHTML = Login();
-  } else if (location.hash === '#feed') {
+  } else if (window.location.hash === '#feed') {
     authCheck();
   }
 };

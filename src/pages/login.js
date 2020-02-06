@@ -2,7 +2,7 @@
 import Button from '../components/button.js';
 import Input from '../components/input.js';
 import logo from '../components/logo.js';
-import Google from '../components/google-login.js';
+import Google from '../components/google-login-input.js';
 
 const userLogin = () => {
   const email = document.querySelector('.js-email-input').value;

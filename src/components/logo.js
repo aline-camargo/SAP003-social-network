@@ -5,6 +5,6 @@ const logo = (props) => {
     `;
 
   return template;
-}
+};
 
 export default logo;

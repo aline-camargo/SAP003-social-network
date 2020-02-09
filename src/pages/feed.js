@@ -234,11 +234,12 @@ const postTemplate = doc => `
 
 const newPost = () => {
   const theTextArea = document.querySelector('.add-post');
+  const linksReplaced = theTextArea.value.replace(/http.*/g, te => `<a href=${te}>${te}</a>`);
   const privacyOption = document.querySelector('.privacy-option');
   const post = {
     name: funcs.auth.currentUser.displayName,
     user: funcs.auth.currentUser.uid,
-    text: theTextArea.value.replace(/\n/g, '<br>'),
+    text: linksReplaced.replace(/\n/g, '<br>'),
     likes: 0,
     commentsCount: 0,
     timestamp: new Date().getTime(),
